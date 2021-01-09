@@ -9,10 +9,15 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@date-io/date-fns": "v1",
     "@loadable/component": "^5.14.1",
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/pickers": "^3.2.10",
+    "axios": "^0.21.1",
     "clsx": "latest",
+    "date-fns": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^5.2.0",

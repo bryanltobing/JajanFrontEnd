@@ -8,6 +8,10 @@ const SignUpPages = loadable(() => import('Components/SignUp/SignUp'), {
   fallback: <LinearProgress />,
 })
 
+const LoginPages = loadable(() => import('Components/SignIn/SignIn'), {
+  fallback: <LinearProgress />,
+})
+
 const Routes = () => {
   return (
     <Switch>
@@ -23,6 +27,7 @@ const Routes = () => {
         )}
       />
       <Route exact path="/register" component={SignUpPages} />
+      <Route exact path="/login" component={LoginPages} />
     </Switch>
   )
 }
