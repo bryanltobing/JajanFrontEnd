@@ -8,7 +8,6 @@ import Checkbox from '@material-ui/core/Checkbox'
 import MUILink from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
@@ -17,14 +16,21 @@ import Collapse from '@material-ui/core/Collapse'
 import Alert from '@material-ui/lab/Alert'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
+import burgerLogo from 'assets/img/logo.png'
+import { isEmpty, isEmptyNotValidForm } from 'helpers/validator'
+import jajanRequest from 'Apis/Jajan'
+import { createCookie } from 'helpers/cookies'
+import { Backdrop, CircularProgress, Fade } from '@material-ui/core'
+import history from 'helpers/history'
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <MUILink color="inherit" href="https://material-ui.com/">
-        Your Website
-      </MUILink>{' '}
+      <Link to="/" color="inherit">
+        {' '}
+        Jajan
+      </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -49,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }))
 
 export default function SignIn(props) {
@@ -56,6 +66,15 @@ export default function SignIn(props) {
 
   const [alertOpen, setAlertOpen] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     if (props.history.location?.state?.registerSuccessMessage) {
@@ -63,14 +82,54 @@ export default function SignIn(props) {
       setAlertMessage(props.history.location?.state?.registerSuccessMessage)
     }
 
+    document.title = 'Login'
+
     return () => {
       setAlertOpen(false)
       setAlertMessage('')
     }
   }, [])
 
+  const handleSubmit = async (evt) => {
+    evt.preventDefault()
+    setSubmitting(true)
+
+    if (isEmptyNotValidForm([email, password])) {
+      return false
+    }
+
+    try {
+      setIsLoading(true)
+      const response = await jajanRequest.post('/login', {
+        email: email,
+        hashPassword: password,
+      })
+      if (rememberMe) {
+        createCookie('authToken', response.data?.token, 7)
+      } else {
+        createCookie('authToken', response.data?.token)
+      }
+      history.push('/')
+      setIsLoading(false)
+    } catch (err) {
+      setError(true)
+      setErrorMessage(err.response?.data?.message)
+      setIsLoading(false)
+    }
+  }
+
   return (
     <>
+      {error && (
+        <Fade in={error}>
+          <Alert variant="filled" severity="error">
+            {errorMessage}
+          </Alert>
+        </Fade>
+      )}
+      <Backdrop className={classes.backdrop} open={isLoading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Collapse in={alertOpen}>
         <Alert
           action={
@@ -102,13 +161,17 @@ export default function SignIn(props) {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <img
+              src={burgerLogo}
+              style={{ width: '100%', backgroundColor: 'white' }}
+            />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
+              error={submitting && isEmpty(email)}
               variant="outlined"
               margin="normal"
               required
@@ -118,8 +181,12 @@ export default function SignIn(props) {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={(evt) => setEmail(evt.target.value?.toLowerCase())}
+              value={email}
+              helperText={submitting && isEmpty(email) && 'Email is required'}
             />
             <TextField
+              error={submitting && isEmpty(password)}
               variant="outlined"
               margin="normal"
               required
@@ -129,9 +196,20 @@ export default function SignIn(props) {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(evt) => setPassword(evt.target.value)}
+              value={password}
+              helperText={
+                submitting && isEmpty(password) && 'Pasword is required'
+              }
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  checked={rememberMe}
+                  color="primary"
+                  onChange={(evt) => setRememberMe(evt.target.checked)}
+                />
+              }
               label="Remember me"
             />
             <Button

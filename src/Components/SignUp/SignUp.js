@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -74,6 +74,10 @@ export default function SignUp() {
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    document.title = 'Register'
+  }, [])
 
   const handleSubmit = async (evt) => {
     evt.preventDefault()
@@ -188,7 +192,7 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                   value={email}
-                  onChange={(evt) => setEmail(evt.target.value)}
+                  onChange={(evt) => setEmail(evt.target.value?.toLowerCase())}
                   helperText={submitting && isEmpty(email) && 'Required'}
                 />
               </Grid>

@@ -1,8 +1,12 @@
 import loadable from '@loadable/component'
-import { Switch, Route, Link } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 
 import React from 'react'
 import { Button, LinearProgress } from '@material-ui/core'
+import PublicRoute from './PublicRoute'
+import VerifiedRoute from './VerifiedRoute'
+import history from 'helpers/history'
+import { eraseCookie } from 'helpers/cookies'
 
 const SignUpPages = loadable(() => import('Components/SignUp/SignUp'), {
   fallback: <LinearProgress />,
@@ -15,19 +19,24 @@ const LoginPages = loadable(() => import('Components/SignIn/SignIn'), {
 const Routes = () => {
   return (
     <Switch>
-      <Route
+      <VerifiedRoute
         exact
         path="/"
-        render={() => (
-          <Link to="/register">
-            <Button variant="contained" color="primary">
-              Register
-            </Button>
-          </Link>
+        component={() => (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={async () => {
+              history.push('/login')
+              eraseCookie('authToken')
+            }}
+          >
+            Logout
+          </Button>
         )}
       />
-      <Route exact path="/register" component={SignUpPages} />
-      <Route exact path="/login" component={LoginPages} />
+      <PublicRoute exact path="/register" component={SignUpPages} />
+      <PublicRoute exact path="/login" component={LoginPages} />
     </Switch>
   )
 }
