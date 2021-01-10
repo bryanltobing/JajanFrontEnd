@@ -34,11 +34,16 @@ const AddProductPages = loadable(
   }
 )
 
+const ProductPages = loadable(() => import('Components/Products/Products'), {
+  fallback: <LinearProgress />,
+})
+
 const Routes = () => {
   return (
     <Switch>
       <VerifiedRoute exact path="/" component={DashboardPages} />
       <VerifiedRoute exact path="/add-product" component={AddProductPages} />
+      <VerifiedRoute exact path="/products" component={ProductPages} />
       <PublicRoute exact path="/register" component={SignUpPages} />
       <PublicRoute exact path="/login" component={LoginPages} />
       <PublicRoute

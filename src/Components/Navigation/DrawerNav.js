@@ -15,6 +15,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 
 import List from '@material-ui/core/List'
 import { Link } from 'react-router-dom'
+import BallotIcon from '@material-ui/icons/Ballot'
 
 const drawerWidth = 240
 
@@ -87,6 +88,17 @@ const DrawerNav = (props) => {
       </div>
       <Divider />
       <List>
+        <Link
+          to="/products"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <ListItem button key="Products">
+            <ListItemIcon>
+              <BallotIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Products'} />
+          </ListItem>
+        </Link>
         <Link
           to="/add-product"
           style={{ textDecoration: 'none', color: 'inherit' }}
