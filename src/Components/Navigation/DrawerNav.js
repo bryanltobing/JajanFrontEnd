@@ -16,6 +16,9 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import { Link } from 'react-router-dom'
 import BallotIcon from '@material-ui/icons/Ballot'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import history from 'helpers/history'
+import { eraseCookie } from 'helpers/cookies'
 
 const drawerWidth = 240
 
@@ -99,6 +102,7 @@ const DrawerNav = (props) => {
             <ListItemText primary={'Products'} />
           </ListItem>
         </Link>
+
         <Link
           to="/add-product"
           style={{ textDecoration: 'none', color: 'inherit' }}
@@ -110,26 +114,21 @@ const DrawerNav = (props) => {
             <ListItemText primary={'Add Product'} />
           </ListItem>
         </Link>
-        {['Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
       </List>
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <ListItem
+        button
+        key="Logout"
+        onClick={() => {
+          eraseCookie('authToken')
+          history.push('/login')
+        }}
+      >
+        <ListItemIcon>
+          <ExitToAppIcon />
+        </ListItemIcon>
+        <ListItemText primary={'Logout'} />
+      </ListItem>
     </Drawer>
   )
 }
