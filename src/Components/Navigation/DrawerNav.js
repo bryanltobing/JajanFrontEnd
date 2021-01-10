@@ -19,6 +19,8 @@ import BallotIcon from '@material-ui/icons/Ballot'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import history from 'helpers/history'
 import { eraseCookie } from 'helpers/cookies'
+import PaymentIcon from '@material-ui/icons/Payment'
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 
 const drawerWidth = 240
 
@@ -66,6 +68,8 @@ const useStyles = makeStyles((theme) => ({
 const DrawerNav = (props) => {
   const theme = useTheme()
   const classes = useStyles()
+  const role = localStorage.getItem('user-role')
+  console.log(role)
   return (
     <Drawer
       variant="permanent"
@@ -103,17 +107,46 @@ const DrawerNav = (props) => {
           </ListItem>
         </Link>
 
-        <Link
-          to="/add-product"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          <ListItem button key="Add Product">
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary={'Add Product'} />
-          </ListItem>
-        </Link>
+        {role === 'common_user' && (
+          <>
+            <Link
+              to="/keranjang"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <ListItem button key="Keranjang">
+                <ListItemIcon>
+                  <AddShoppingCartIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Keranjang'} />
+              </ListItem>
+            </Link>
+            <Link
+              to="/payments"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <ListItem button key="Payment">
+                <ListItemIcon>
+                  <PaymentIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Payments'} />
+              </ListItem>
+            </Link>
+          </>
+        )}
+
+        {role === 'admin' && (
+          <Link
+            to="/add-product"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <ListItem button key="Add Product">
+              <ListItemIcon>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Add Product'} />
+            </ListItem>
+          </Link>
+        )}
       </List>
       <Divider />
       <ListItem
