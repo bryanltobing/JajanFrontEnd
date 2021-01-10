@@ -116,13 +116,13 @@ export default function SignIn(props) {
             userId: tokenDecoced._id,
           },
         })
-        console.log(tokenDecoced)
       } else {
         if (rememberMe) {
           createCookie('authToken', token, 7)
         } else {
           createCookie('authToken', token)
         }
+        localStorage.setItem('user-role', tokenDecoced.role)
         history.push('/')
       }
 

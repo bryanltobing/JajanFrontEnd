@@ -5,6 +5,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
+import { Link } from 'react-router-dom'
 
 const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
@@ -52,9 +53,11 @@ const AppBarNav = (props) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap>
-          Jajan Apps Dashboard
-        </Typography>
+        <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+          <Typography variant="h6" noWrap>
+            Jajan Apps Dashboard
+          </Typography>
+        </Link>
       </Toolbar>
     </AppBar>
   )
