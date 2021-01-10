@@ -7,7 +7,6 @@ import PublicRoute from './PublicRoute'
 import VerifiedRoute from './VerifiedRoute'
 import history from 'helpers/history'
 import { eraseCookie } from 'helpers/cookies'
-import PhoneLogin from 'Components/PhoneLogin'
 
 const SignUpPages = loadable(() => import('Components/SignUp/SignUp'), {
   fallback: <LinearProgress />,
@@ -50,7 +49,6 @@ const Routes = () => {
         path="/phone-verify/:phoneNumber"
         component={PhoneVerifyPages}
       />
-      <PublicRoute exact path="/phone" component={PhoneLogin} />
     </Switch>
   )
 }

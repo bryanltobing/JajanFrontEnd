@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Container,
   CssBaseline,
+  Fade,
   makeStyles,
   TextField,
   Typography,
@@ -15,6 +16,7 @@ import { isEmpty } from 'helpers/validator'
 import firebase from '../../firebaseConfig'
 import jajanRequest from 'Apis/Jajan'
 import history from 'helpers/history'
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,6 +49,9 @@ const PhoneVerify = (props) => {
   const [otp, setOtp] = useState('')
   const [isLoading, setisLoading] = useState(false)
 
+  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
   useEffect(() => {
     if (!props.location?.state) {
       history.push('/login')
@@ -70,9 +75,12 @@ const PhoneVerify = (props) => {
         // console.log(confirmationResult);
         console.log('OTP is sent')
         setisLoading(false)
+        setError(false)
       })
       .catch(function (error) {
-        console.log(error)
+        setisLoading(false)
+        setError(true)
+        setErrorMessage(error?.code)
       })
   }, [])
 
@@ -107,6 +115,7 @@ const PhoneVerify = (props) => {
               })
             })
             .catch((err) => {
+              setisLoading(false)
               console.log(err)
               console.log(err?.response?.data?.message)
             })
@@ -142,6 +151,13 @@ const PhoneVerify = (props) => {
 
   return (
     <>
+      {error && (
+        <Fade in={true}>
+          <Alert variant="filled" severity="error">
+            {errorMessage}
+          </Alert>
+        </Fade>
+      )}
       <Backdrop className={classes.backdrop} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
