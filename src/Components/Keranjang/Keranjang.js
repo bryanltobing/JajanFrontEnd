@@ -14,12 +14,15 @@ const Keranjang = () => {
         },
       })
       .then((response) => {
-        console.log(response.data)
+        if (response.data && response.data.message === 'No keranjang found') {
+          setKeranjang(response.data.data)
+          return
+        }
         setKeranjang(response.data)
       })
       .catch((err) => {
         alert(err)
-        console.log(err)
+        // console.log(err)
       })
   }, [])
 

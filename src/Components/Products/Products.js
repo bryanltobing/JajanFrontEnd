@@ -82,24 +82,25 @@ export default function Products() {
 
   const addToKeranjang = async (idUser, idProduct, qty = 1) => {
     try {
-      const response = jajanRequest.post(
-        '/keranjang',
-        {
-          idUser,
-          listProduct: [
-            {
-              idProduct,
-              qty,
-            },
-          ],
-        },
-        {
-          headers: {
-            Authorization: `JWT ${readCookie('authToken')}`,
-          },
-        }
-      )
-      console.log(response.data)
+      console.log(idProduct)
+      // const response = jajanRequest.post(
+      //   '/keranjang',
+      //   {
+      //     idUser,
+      //     listProduct: [
+      //       {
+      //         idProduct,
+      //         qty,
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `JWT ${readCookie('authToken')}`,
+      //     },
+      //   }
+      // )
+      // console.log(response.data)
     } catch (err) {
       console.log(err.response)
     }
@@ -137,36 +138,40 @@ export default function Products() {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {products.map((product, card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={product.imgPath}
-                    title={product.nameProduct}
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {product.nameProduct}
-                    </Typography>
-                    <Typography>This is a good stuff tough</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      IDR {product.priceProduct}
-                    </Button>
-                    <Button
-                      size="small"
-                      color="primary"
-                      onClick={() => addToKeranjang(userInfo._id, product._id)}
-                    >
-                      Add to keranjang
-                      <AddShoppingCartIcon />
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
+            {products.map((product, card) => {
+              return (
+                <Grid item key={card} xs={12} sm={6} md={4}>
+                  <Card className={classes.card}>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image={product.imgPath}
+                      title={product.nameProduct}
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {product.nameProduct}
+                      </Typography>
+                      <Typography>This is a good stuff tough</Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button size="small" color="primary">
+                        IDR {product.priceProduct}
+                      </Button>
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() =>
+                          addToKeranjang(userInfo._id, product._id)
+                        }
+                      >
+                        Add to keranjang
+                        <AddShoppingCartIcon />
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              )
+            })}
           </Grid>
         </Container>
       </main>

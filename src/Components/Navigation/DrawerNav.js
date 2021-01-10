@@ -69,7 +69,6 @@ const DrawerNav = (props) => {
   const theme = useTheme()
   const classes = useStyles()
   const role = localStorage.getItem('user-role')
-  console.log(role)
   return (
     <Drawer
       variant="permanent"
