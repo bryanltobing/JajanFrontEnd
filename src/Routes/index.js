@@ -41,6 +41,12 @@ const ProductPages = loadable(() => import('Components/Products/Products'), {
 const PaymentPages = loadable(() => import('Components/Payments/Payments'), {
   fallback: <LinearProgress />,
 })
+const KeranjangPages = loadable(
+  () => import('Components/Keranjang/Keranjang'),
+  {
+    fallback: <LinearProgress />,
+  }
+)
 
 const Routes = () => {
   return (
@@ -49,6 +55,7 @@ const Routes = () => {
       <VerifiedRoute exact path="/add-product" component={AddProductPages} />
       <VerifiedRoute exact path="/products" component={ProductPages} />
       <VerifiedRoute exact path="/payments" component={PaymentPages} />
+      <VerifiedRoute exact path="/keranjang" component={KeranjangPages} />
       <PublicRoute exact path="/register" component={SignUpPages} />
       <PublicRoute exact path="/login" component={LoginPages} />
       <PublicRoute

@@ -13,6 +13,8 @@ import Link from '@material-ui/core/Link'
 import jajanRequest from 'Apis/Jajan'
 import { readCookie } from 'helpers/cookies'
 import { CircularProgress } from '@material-ui/core'
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
+import jwtDecode from 'jwt-decode'
 
 function Copyright() {
   return (
@@ -63,6 +65,7 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 export default function Products() {
   const [products, setProducts] = useState([])
+  const userInfo = jwtDecode(readCookie('authToken'))
   useEffect(() => {
     jajanRequest
       .get('/admin/product', {
@@ -76,6 +79,31 @@ export default function Products() {
       })
   }, [])
   const classes = useStyles()
+
+  const addToKeranjang = async (idUser, idProduct, qty = 1) => {
+    try {
+      const response = jajanRequest.post(
+        '/keranjang',
+        {
+          idUser,
+          listProduct: [
+            {
+              idProduct,
+              qty,
+            },
+          ],
+        },
+        {
+          headers: {
+            Authorization: `JWT ${readCookie('authToken')}`,
+          },
+        }
+      )
+      console.log(response.data)
+    } catch (err) {
+      console.log(err.response)
+    }
+  }
 
   return (
     <React.Fragment>
@@ -126,6 +154,14 @@ export default function Products() {
                   <CardActions>
                     <Button size="small" color="primary">
                       IDR {product.priceProduct}
+                    </Button>
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={() => addToKeranjang(userInfo._id, product._id)}
+                    >
+                      Add to keranjang
+                      <AddShoppingCartIcon />
                     </Button>
                   </CardActions>
                 </Card>
