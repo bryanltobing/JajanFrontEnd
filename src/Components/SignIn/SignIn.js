@@ -22,6 +22,7 @@ import jajanRequest from 'Apis/Jajan'
 import { createCookie } from 'helpers/cookies'
 import { Backdrop, CircularProgress, Fade } from '@material-ui/core'
 import history from 'helpers/history'
+import jwtDecode from 'jwt-decode'
 
 function Copyright() {
   return (
@@ -104,12 +105,27 @@ export default function SignIn(props) {
         email: email,
         hashPassword: password,
       })
-      if (rememberMe) {
-        createCookie('authToken', response.data?.token, 7)
+      const token = response.data?.token
+      const tokenDecoced = jwtDecode(response.data?.token)
+
+      if (!tokenDecoced.isPhoneVerify) {
+        history.push({
+          pathname: '/phone-verify/+' + tokenDecoced.noTelp,
+          state: {
+            registerSuccessMessage: 'Register Successfully',
+            userId: tokenDecoced._id,
+          },
+        })
+        console.log(tokenDecoced)
       } else {
-        createCookie('authToken', response.data?.token)
+        if (rememberMe) {
+          createCookie('authToken', token, 7)
+        } else {
+          createCookie('authToken', token)
+        }
+        history.push('/')
       }
-      history.push('/')
+
       setIsLoading(false)
     } catch (err) {
       setError(true)

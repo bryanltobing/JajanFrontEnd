@@ -110,10 +110,13 @@ export default function SignUp() {
         setErrorMessage('')
         setIsLoading(false)
 
+        console.log(response.data)
+
         history.push({
-          pathname: '/login',
+          pathname: '/phone-verify/' + noTelp,
           state: {
             registerSuccessMessage: response.data?.message,
+            userId: response.data?.userId,
           },
         })
       } catch (err) {
@@ -223,7 +226,11 @@ export default function SignUp() {
                   autoComplete="phoneNumber"
                   value={noTelp}
                   onChange={(evt) => setNoTelp(evt.target.value)}
-                  helperText={submitting && isEmpty(noTelp) && 'Required'}
+                  helperText={
+                    submitting && isEmpty(noTelp)
+                      ? 'Required'
+                      : 'Phone number format +62****'
+                  }
                 />
               </Grid>
 
